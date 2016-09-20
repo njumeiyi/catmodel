@@ -26,3 +26,19 @@ dim(hazard.plot) <- dim.hazard
 hazard.plot <- ifelse(hazard.plot>100,100,hazard.plot)
 image.plot(x.coord,y.coord,hazard.plot,zlim=c(0,100),xlab="Longitude",ylab="Latitude")
 map(add=T,col='white',lwd=2)
+
+
+# number of locations in the exposure set
+n.loc <- 20
+# create exposure, e.g. $100k per subject at risk
+exposure <- rep(100000,n.loc)
+# give each of the locations a random location in the n.grids event grids
+location.in.hazard <- as.integer(runif(n.loc)*n.grids)+1
+
+# 3) Create vulnerability
+# a parameterized function for a hazard between 0 and 100
+damage.ratio <- function(hazard) {
+  hazard <- ifelse(hazard<20,0,hazard)
+  hazard <- ifelse(hazard>99.99,99.99,hazard)
+  damage.ratio <- (hazard/100)**6
+}
